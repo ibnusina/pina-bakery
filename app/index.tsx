@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,60 +18,15 @@ import {
   Croissant,
 } from "lucide-react-native";
 import MenuCard from "@/components/MenuCard";
-
-const categories = [
-  { id: "1", name: "Semua", icon: <ReceiptText size={20} color="gray" /> },
-  { id: "2", name: "Cake", icon: <CakeSlice size={20} color="gray" /> },
-  { id: "3", name: "Roti", icon: <Donut size={20} color="gray" /> },
-  { id: "4", name: "Pastry", icon: <Croissant size={20} color="gray" /> },
-];
-
-const foodMenu = [
-  {
-    id: "1",
-    name: "Roti fasdfa sf sdfs sfd sd",
-    image:
-      "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
-    bg_color: "#E6EEE0",
-    price: "Rp 150",
-  },
-  {
-    id: "2",
-    name: "Kue Sus",
-    image:
-      "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
-    bg_color: "#E4E2F0",
-    price: "Rp 15000",
-  },
-  {
-    id: "3",
-    name: "Bolu Gulung",
-    image:
-      "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
-    bg_color: "#DFE9F2",
-    price: "Rp 15000",
-  },
-  {
-    id: "4",
-    name: "Apple Pie",
-    image:
-      "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
-    bg_color: "#F2E0D6",
-    price: "Rp 15000",
-  },
-  {
-    id: "5",
-    name: "Croissant Pie",
-    image:
-      "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
-    bg_color: "#F2E0D6",
-    price: "Rp 15000",
-  },
-];
+import CategoryRadioItem from "@/components/CategoryRadioItem";
+import CategoryRadio from "@/components/CategoryRadio";
+import { categories, FoodCategory } from "@/constants/Category";
+import { products } from "@/constants/Product";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const cartItemsCount = 3;
+  const [selectedCategory, setSelectedCategory] = useState(FoodCategory.None);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -96,32 +51,33 @@ export default function HomeScreen() {
       </View> */}
 
       <ScrollView className="flex-1">
-        <View className="flex flex-row px-4 py-4 space-x-4 gap-1">
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              className="grow"
-              onPress={() => navigation.navigate("Category")}
-            >
-              <View className="bg-gray-100 grow h-16 rounded-2xl items-center justify-center">
-                {category.icon}
-              </View>
-              <Text className="mt-2 text-center">{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <CategoryRadio
+          categories={categories.map((val) => {
+            return { ...val, isSelected: selectedCategory === val.category };
+          })}
+          onPress={(category) => {
+            setSelectedCategory(category);
+          }}
+        />
 
         <View className="px-4">
           <Text className="text-xl font-bold mb-4">Food Menu</Text>
           <View className="flex-row flex-wrap justify-between gap-1">
-            {foodMenu.map((item) => (
-              <MenuCard
-                id={item.id}
-                name={item.name}
-                price={item.price}
-                image={item.image}
-              />
-            ))}
+            {products
+              .filter((item) => {
+                if (selectedCategory === FoodCategory.None) {
+                  return true;
+                }
+                return item.categories.includes(selectedCategory);
+              })
+              .map((item) => (
+                <MenuCard
+                  id={item.id}
+                  name={item.name}
+                  price={item.price}
+                  image={item.image}
+                />
+              ))}
           </View>
         </View>
       </ScrollView>
