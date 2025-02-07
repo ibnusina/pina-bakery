@@ -16,7 +16,7 @@ export const products = [
     image:
       "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738849653/strawberry_pie_fo2eyn.jpg",
     bg_color: "#E6EEE0",
-    price: "Rp 15.000",
+    price: "Rp 18.000",
     categories: [FoodCategory.Pastry]
   },
   {
@@ -25,7 +25,7 @@ export const products = [
     image:
       "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738849654/raisin_puff_ykhbza.jpg",
     bg_color: "#E6EEE0",
-    price: "Rp 15.000",
+    price: "Rp 18.000",
     categories: [FoodCategory.Pastry]
   },
   {
@@ -39,7 +39,7 @@ export const products = [
   },
   {
     id: "2",
-    name: "Kue Sus 6 pcs",
+    name: "Kue Sus Vanila/ Coklat/ Strawberry 6 pcs",
     image:
       "https://res.cloudinary.com/dkruiksqq/image/upload/t_Thumbnail/v1738682556/sus_coklat_fjf6o8.jpg",
     bg_color: "#E4E2F0",
