@@ -25,6 +25,17 @@ export default function HomeScreen() {
   const cartItemsCount = 3;
   const [selectedCategory, setSelectedCategory] = useState(FoodCategory.None);
   const [products, setDisplayedProducts] = useState(rawProduct);
+  const totalItem = products.reduce((total, item) => total + item.quantity, 0);
+  const totalPrice = products.reduce(
+    (total, item) => total + item.quantity * item.priceNumber,
+    0
+  );
+
+  function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return parts.join(".");
+  }
   return (
     <SheetProvider>
       <SafeAreaView className="flex-1 bg-white">
@@ -50,15 +61,31 @@ export default function HomeScreen() {
             >
               <Headset size={20} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               className="flex-row items-center bg-orange-500 rounded-full px-3 py-1"
               onPress={() => navigation.navigate("Cart")}
             >
               <ShoppingBasket size={20} color="white" />
               <Text className="text-white ml-1">{cartItemsCount}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
+        {totalItem > 0 && (
+          <View className="px-4 pb-1 flex-row justify-between items-center">
+            <View className="flex-row items-center gap-1">
+              <Text className="text-sm">{totalItem} barang</Text>
+              <Text className="font-bold text-lg">
+                Rp {numberWithCommas(totalPrice)}
+              </Text>
+            </View>
+            <TouchableOpacity className="rounded-full bg-orange-500 px-4 py-2 flex-row gap-1">
+              <Text className="text-white text-sm font-semibold">
+                Lihat Keranjang & Pesan
+              </Text>
+              <ShoppingBasket color="white" size={18} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View className="h-[1px] bg-gray-300"></View>
 
         <ScrollView className="flex-1">
