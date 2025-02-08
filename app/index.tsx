@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { ShoppingBag, Headset } from "lucide-react-native";
+import { ShoppingBasket, Headset } from "lucide-react-native";
 import MenuCard from "@/components/MenuCard";
 import CategoryRadioItem from "@/components/CategoryRadioItem";
 import CategoryRadio from "@/components/CategoryRadio";
 import { categories, FoodCategory } from "@/constants/Category";
-import { products } from "@/constants/Product";
+import { products as rawProduct } from "@/constants/Product";
 import logo from "@/assets/images/logo.png";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import { SheetProvider } from "react-native-actions-sheet";
@@ -24,7 +24,7 @@ export default function HomeScreen() {
   const navigation = useNavigation();
   const cartItemsCount = 3;
   const [selectedCategory, setSelectedCategory] = useState(FoodCategory.None);
-
+  const [products, setDisplayedProducts] = useState(rawProduct);
   return (
     <SheetProvider>
       <SafeAreaView className="flex-1 bg-white">
@@ -54,19 +54,12 @@ export default function HomeScreen() {
               className="flex-row items-center bg-orange-500 rounded-full px-3 py-1"
               onPress={() => navigation.navigate("Cart")}
             >
-              <ShoppingBag size={20} color="white" />
+              <ShoppingBasket size={20} color="white" />
               <Text className="text-white ml-1">{cartItemsCount}</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View className="h-[1px] bg-gray-300"></View>
-
-        {/* <View className="px-4 py-2">
-        <View className="flex-row items-center bg-gray-100 rounded-full px-4 py-2">
-          <Search size={20} color="gray" />
-          <TextInput placeholder="Search" className="flex-1 ml-2" placeholderTextColor="gray" />
-        </View>
-      </View> */}
 
         <ScrollView className="flex-1">
           <CategoryRadio
@@ -88,14 +81,47 @@ export default function HomeScreen() {
                   }
                   return item.categories.includes(selectedCategory);
                 })
-                .map((item) => (
-                  <MenuCard
-                    id={item.id}
-                    name={item.name}
-                    price={item.price}
-                    image={item.image}
-                  />
-                ))}
+                .map((item) => {
+                  return (
+                    <MenuCard
+                      id={item.id}
+                      name={item.name}
+                      price={item.price}
+                      image={item.image}
+                      quantity={item.quantity}
+                      onPlus={() =>
+                        setDisplayedProducts((prev) => {
+                          var elementIndex = -1;
+
+                          prev.forEach((element, index, array) => {
+                            if (element.id === item.id) {
+                              elementIndex = index;
+                            }
+                          });
+                          item.quantity = item.quantity + 1;
+
+                          prev[elementIndex] = item;
+                          return prev.slice();
+                        })
+                      }
+                      onMinus={() =>
+                        setDisplayedProducts((prev) => {
+                          var elementIndex = -1;
+                          prev.forEach((element, index, array) => {
+                            if (element.id === item.id) {
+                              elementIndex = index;
+                            }
+                          });
+                          item.quantity = item.quantity - 1;
+
+                          prev[elementIndex] = item;
+
+                          return prev.slice();
+                        })
+                      }
+                    />
+                  );
+                })}
             </View>
           </View>
         </ScrollView>
