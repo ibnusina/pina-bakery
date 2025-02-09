@@ -70,22 +70,26 @@ export default function HomeScreen() {
             </TouchableOpacity> */}
           </View>
         </View>
-        {totalItem > 0 && (
-          <View className="px-4 pb-1 flex-row justify-between items-center">
-            <View className="flex-row items-center gap-1">
-              <Text className="text-sm">{totalItem} barang</Text>
-              <Text className="font-bold text-lg">
-                Rp {numberWithCommas(totalPrice)}
-              </Text>
-            </View>
-            <TouchableOpacity className="rounded-full bg-orange-500 px-4 py-2 flex-row gap-1">
-              <Text className="text-white text-sm font-semibold">
-                Lihat Keranjang & Pesan
-              </Text>
-              <ShoppingBasket color="white" size={18} />
-            </TouchableOpacity>
+
+        <View
+          className={`${
+            totalItem > 0 ? "h-[40px] opacity-100" : "h-0 opacity-0"
+          } transition-all ease-in-out delay-100 duration-300 px-4 pb-1 flex-row justify-between items-center`}
+        >
+          <View className="flex-row items-center gap-1">
+            <Text className="text-sm">{totalItem} barang</Text>
+            <Text className="font-bold text-lg">
+              Rp {numberWithCommas(totalPrice)}
+            </Text>
           </View>
-        )}
+          <TouchableOpacity className="rounded-full bg-orange-500 px-4 py-2 flex-row gap-1">
+            <Text className="text-white text-sm font-semibold">
+              Lihat Keranjang & Pesan
+            </Text>
+            <ShoppingBasket color="white" size={18} />
+          </TouchableOpacity>
+        </View>
+
         <View className="h-[1px] bg-gray-300"></View>
 
         <ScrollView className="flex-1">

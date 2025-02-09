@@ -44,7 +44,7 @@ function ContactSheet() {
                   <Text className="text-lg my-2">{item.title}</Text>
                 </View>
 
-                <View className="h-[1px] bg-neutral-600"></View>
+                <View className="h-[1px] bg-neutral-200"></View>
               </TouchableOpacity>
             );
           }}
