@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +21,7 @@ import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import { SheetProvider } from "react-native-actions-sheet";
 import "./sheet.tsx";
 import CartItem from "@/components/CartItem";
+import waLogo from "@/assets/images/wa.png";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -252,11 +254,29 @@ export default function HomeScreen() {
             <TouchableOpacity
               className={`m-4 ${
                 showBasket ? "h-12 opacity-100" : "h-0 opacity-0"
-              } flex bg-orange-500 rounded-full h-12 items-center justify-center`}
+              } flex-row bg-orange-500 rounded-full h-12 items-center justify-center gap-2`}
+              onPress={() => {
+                const order = `Halo Pina Bakery,%0a Saya ingin memesan item berikut ini: ${products
+                  .filter((item) => {
+                    return item.quantity > 0;
+                  })
+                  .map((item) => {
+                    return (
+                      "%0a- " +
+                      item.name +
+                      " x " +
+                      item.quantity +
+                      " : Rp" +
+                      numberWithCommas(item.quantity * item.priceNumber)
+                    );
+                  })}%0aTotal: Rp ${numberWithCommas(totalPrice)}`;
+                Linking.openURL(`https://wa.me/6285700359424?text=${order}`);
+              }}
             >
               <Text className="text-white font-semibold text-l">
-                Pesan Sekarang & Arahkan ke Whatsapp
+                Lanjutkan pesanan via Whatsapp
               </Text>
+              <Image source={waLogo} />
             </TouchableOpacity>
           </View>
         </View>
