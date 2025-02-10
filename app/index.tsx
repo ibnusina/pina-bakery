@@ -185,102 +185,100 @@ export default function HomeScreen() {
               </View>
             </View>
           </ScrollView>
-          {showBasket == true && (
-            <View
+          <View
+            className={`${
+              showBasket ? "h-full opacity-100" : "h-0 opacity-0 collapse"
+            } bg-white absolute w-full transition-all ease-in-out delay-100 duration-300`}
+          >
+            <ScrollView
               className={`${
-                showBasket ? "h-full opacity-100" : "h-0 opacity-0"
-              } bg-white absolute w-full transition-all ease-in-out delay-100 duration-300`}
+                showBasket ? "h-11 opacity-100" : "h-0 opacity-0 collapse"
+              } flex-grow`}
             >
-              <ScrollView
-                className={`${
-                  showBasket ? "h-11 opacity-100" : "h-0 opacity-0 collapse"
-                } flex-grow`}
-              >
-                <View className="flex-col justify-start items-stretch gap-1">
-                  {products
-                    .filter((item) => {
-                      return item.quantity > 0;
-                    })
-                    .map((item) => {
-                      return (
-                        <CartItem
-                          item={item}
-                          key={item.id}
-                          onPlus={() =>
-                            setDisplayedProducts((prev) => {
-                              var elementIndex = -1;
+              <View className="flex-col justify-start items-stretch gap-1">
+                {products
+                  .filter((item) => {
+                    return item.quantity > 0;
+                  })
+                  .map((item) => {
+                    return (
+                      <CartItem
+                        item={item}
+                        key={item.id}
+                        onPlus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
 
-                              prev.forEach((element, index, array) => {
-                                if (element.id === item.id) {
-                                  elementIndex = index;
-                                }
-                              });
-                              item.quantity = item.quantity + 1;
-
-                              prev[elementIndex] = item;
-                              return prev.slice();
-                            })
-                          }
-                          onMinus={() =>
-                            setDisplayedProducts((prev) => {
-                              var elementIndex = -1;
-                              prev.forEach((element, index, array) => {
-                                if (element.id === item.id) {
-                                  elementIndex = index;
-                                }
-                              });
-                              item.quantity = item.quantity - 1;
-
-                              prev[elementIndex] = item;
-                              if (
-                                prev.reduce((totalItem, item) => {
-                                  return totalItem + item.quantity;
-                                }, 0) <= 0
-                              ) {
-                                setShowBasket(false);
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
                               }
+                            });
+                            item.quantity = item.quantity + 1;
 
-                              return prev.slice();
-                            })
-                          }
-                        />
-                      );
-                    })}
-                </View>
-                <Text className="text-right mx-4 my-1">{`Total: Rp ${numberWithCommas(
-                  totalPrice
-                )}`}</Text>
-              </ScrollView>
+                            prev[elementIndex] = item;
+                            return prev.slice();
+                          })
+                        }
+                        onMinus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
+                              }
+                            });
+                            item.quantity = item.quantity - 1;
 
-              <TouchableOpacity
-                className={`m-4 ${
-                  showBasket ? "h-12 opacity-100" : "h-0 opacity-0"
-                } flex-row bg-orange-500 rounded-full h-12 items-center justify-center gap-2`}
-                onPress={() => {
-                  const order = `Halo Pina Bakery,%0a Saya ingin memesan item berikut ini: ${products
-                    .filter((item) => {
-                      return item.quantity > 0;
-                    })
-                    .map((item) => {
-                      return (
-                        "%0a- " +
-                        item.name +
-                        " x " +
-                        item.quantity +
-                        " : Rp" +
-                        numberWithCommas(item.quantity * item.priceNumber)
-                      );
-                    })}%0aTotal: Rp ${numberWithCommas(totalPrice)}`;
-                  Linking.openURL(`https://wa.me/6285700359424?text=${order}`);
-                }}
-              >
-                <Text className="text-white font-semibold text-l">
-                  Lanjutkan pesanan via Whatsapp
-                </Text>
-                <Image source={waLogo} />
-              </TouchableOpacity>
-            </View>
-          )}
+                            prev[elementIndex] = item;
+                            if (
+                              prev.reduce((totalItem, item) => {
+                                return totalItem + item.quantity;
+                              }, 0) <= 0
+                            ) {
+                              setShowBasket(false);
+                            }
+
+                            return prev.slice();
+                          })
+                        }
+                      />
+                    );
+                  })}
+              </View>
+              <Text className="text-right mx-4 my-1">{`Total: Rp ${numberWithCommas(
+                totalPrice
+              )}`}</Text>
+            </ScrollView>
+
+            <TouchableOpacity
+              className={`m-4 ${
+                showBasket ? "h-12 opacity-100" : "h-0 opacity-0 collapse"
+              } flex-row bg-orange-500 rounded-full h-12 items-center justify-center gap-2`}
+              onPress={() => {
+                const order = `Halo Pina Bakery,%0a Saya ingin memesan item berikut ini: ${products
+                  .filter((item) => {
+                    return item.quantity > 0;
+                  })
+                  .map((item) => {
+                    return (
+                      "%0a- " +
+                      item.name +
+                      " x " +
+                      item.quantity +
+                      " : Rp" +
+                      numberWithCommas(item.quantity * item.priceNumber)
+                    );
+                  })}%0aTotal: Rp ${numberWithCommas(totalPrice)}`;
+                Linking.openURL(`https://wa.me/6285700359424?text=${order}`);
+              }}
+            >
+              <Text className="text-white font-semibold text-l">
+                Lanjutkan pesanan via Whatsapp
+              </Text>
+              <Image source={waLogo} />
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     </SheetProvider>
