@@ -97,7 +97,7 @@ export default function HomeScreen() {
         >
           <View className="flex-row items-center gap-1">
             <Text className="text-sm">{totalItem} barang</Text>
-            <Text className="font-bold text-lg">
+            <Text className="font-bold text-l">
               Rp {numberWithCommas(totalPrice)}
             </Text>
           </View>
