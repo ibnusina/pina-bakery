@@ -179,6 +179,14 @@ export default function HomeScreen() {
                             return prev.slice();
                           })
                         }
+                        onPress={() => {
+                          SheetManager.show("product-sheet", {
+                            payload: {
+                              image: item.image_big,
+                              title: item.name,
+                            },
+                          });
+                        }}
                       />
                     );
                   })}

@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 import { ShoppingCart } from "lucide-react-native";
+import { SheetManager } from "react-native-actions-sheet";
 
 const MenuCard = ({
   id,
@@ -10,6 +11,7 @@ const MenuCard = ({
   quantity = 0,
   onPlus,
   onMinus,
+  onPress,
 }) => {
   return (
     <TouchableOpacity
@@ -17,6 +19,7 @@ const MenuCard = ({
       className={
         "flex flex-col w-[49%] mb-4 rounded-3xl max-h-70 border bg-white border-white p-1 shadow-md shadow-neutral-400/70"
       }
+      onPress={onPress}
     >
       <View className="relative grow h-32 rounded-2xl overflow-hidden">
         <Image
