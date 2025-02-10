@@ -19,6 +19,7 @@ import logo from "@/assets/images/logo.png";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import { SheetProvider } from "react-native-actions-sheet";
 import "./sheet.tsx";
+import CartItem from "@/components/CartItem";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -30,6 +31,7 @@ export default function HomeScreen() {
     (total, item) => total + item.quantity * item.priceNumber,
     0
   );
+  const [showBasket, setShowBasket] = useState(false);
 
   function numberWithCommas(x) {
     var parts = x.toString().split(".");
@@ -74,7 +76,7 @@ export default function HomeScreen() {
         <View
           className={`${
             totalItem > 0 ? "h-[40px] opacity-100" : "h-0 opacity-0"
-          } transition-all ease-in-out delay-100 duration-300 px-4 pb-1 flex-row justify-between items-center`}
+          } transition-all ease-in-out delay-100 duration-300 px-4 pb-1 flex-row justify-between items-center bg-white`}
         >
           <View className="flex-row items-center gap-1">
             <Text className="text-sm">{totalItem} barang</Text>
@@ -82,9 +84,14 @@ export default function HomeScreen() {
               Rp {numberWithCommas(totalPrice)}
             </Text>
           </View>
-          <TouchableOpacity className="rounded-full bg-orange-500 px-4 py-2 flex-row gap-1">
+          <TouchableOpacity
+            className="rounded-full bg-orange-500 px-4 py-2 flex-row gap-1"
+            onPress={() => {
+              setShowBasket(!showBasket);
+            }}
+          >
             <Text className="text-white text-sm font-semibold">
-              Lihat Keranjang & Pesan
+              {showBasket ? "Tutup Keranjang" : "Lihat Keranjang"}
             </Text>
             <ShoppingBasket color="white" size={18} />
           </TouchableOpacity>
@@ -92,70 +99,110 @@ export default function HomeScreen() {
 
         <View className="h-[1px] bg-gray-300"></View>
 
-        <ScrollView className="flex-1">
-          <CategoryRadio
-            categories={categories.map((val) => {
-              return { ...val, isSelected: selectedCategory === val.category };
-            })}
-            onPress={(category) => {
-              setSelectedCategory(category);
-            }}
-          />
+        <View className="flex-1 w-full bg-white">
+          <ScrollView className="absulute flex-1">
+            <CategoryRadio
+              categories={categories.map((val) => {
+                return {
+                  ...val,
+                  isSelected: selectedCategory === val.category,
+                };
+              })}
+              onPress={(category) => {
+                setSelectedCategory(category);
+              }}
+            />
 
-          <View className="px-4">
-            <Text className="text-xl font-bold mb-4">Food Menu</Text>
-            <View className="flex-row flex-wrap justify-between gap-1">
-              {products
-                .filter((item) => {
-                  if (selectedCategory === FoodCategory.None) {
-                    return true;
-                  }
-                  return item.categories.includes(selectedCategory);
-                })
-                .map((item) => {
-                  return (
-                    <MenuCard
-                      id={item.id}
-                      name={item.name}
-                      price={item.price}
-                      image={item.image}
-                      quantity={item.quantity}
-                      onPlus={() =>
-                        setDisplayedProducts((prev) => {
-                          var elementIndex = -1;
+            <View className="px-4">
+              <Text className="text-xl font-bold mb-4">Food Menu</Text>
+              <View className="flex-row flex-wrap justify-between gap-1">
+                {products
+                  .filter((item) => {
+                    if (selectedCategory === FoodCategory.None) {
+                      return true;
+                    }
+                    return item.categories.includes(selectedCategory);
+                  })
+                  .map((item) => {
+                    return (
+                      <MenuCard
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                        price={item.price}
+                        image={item.image}
+                        quantity={item.quantity}
+                        onPlus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
 
-                          prev.forEach((element, index, array) => {
-                            if (element.id === item.id) {
-                              elementIndex = index;
-                            }
-                          });
-                          item.quantity = item.quantity + 1;
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
+                              }
+                            });
+                            item.quantity = item.quantity + 1;
 
-                          prev[elementIndex] = item;
-                          return prev.slice();
-                        })
-                      }
-                      onMinus={() =>
-                        setDisplayedProducts((prev) => {
-                          var elementIndex = -1;
-                          prev.forEach((element, index, array) => {
-                            if (element.id === item.id) {
-                              elementIndex = index;
-                            }
-                          });
-                          item.quantity = item.quantity - 1;
+                            prev[elementIndex] = item;
+                            return prev.slice();
+                          })
+                        }
+                        onMinus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
+                              }
+                            });
+                            item.quantity = item.quantity - 1;
 
-                          prev[elementIndex] = item;
+                            prev[elementIndex] = item;
 
-                          return prev.slice();
-                        })
-                      }
-                    />
-                  );
-                })}
+                            return prev.slice();
+                          })
+                        }
+                      />
+                    );
+                  })}
+              </View>
             </View>
+          </ScrollView>
+          <View
+            className={`${
+              showBasket ? "h-full opacity-100" : "h-0 opacity-0"
+            } bg-white absolute w-full transition-all ease-in-out delay-100 duration-300`}
+          >
+            <ScrollView
+              className={`${
+                showBasket ? "h-11 opacity-100" : "h-0 opacity-0"
+              } flex-grow`}
+            >
+              <View className="flex-col justify-start items-stretch gap-1">
+                {products
+                  .filter((item) => {
+                    return item.quantity > 0;
+                  })
+                  .map((item) => {
+                    return <CartItem item={item} key={item.id} />;
+                  })}
+              </View>
+              <Text className="text-right mx-4 my-1">{`Total: Rp ${numberWithCommas(
+                totalPrice
+              )}`}</Text>
+            </ScrollView>
+
+            <TouchableOpacity
+              className={`m-4 ${
+                showBasket ? "h-12 opacity-100" : "h-0 opacity-0"
+              } flex bg-orange-500 rounded-full h-12 items-center justify-center`}
+            >
+              <Text className="text-white font-semibold text-l">
+                Pesan Sekarang & Arahkan ke Whatsapp
+              </Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </SheetProvider>
   );
