@@ -31,13 +31,28 @@ export default function HomeScreen() {
     (total, item) => total + item.quantity * item.priceNumber,
     0
   );
-  const [showBasket, setShowBasket] = useState(false);
+  const [showBasket, setShowBasket] = useState(totalItem > 0);
 
   function numberWithCommas(x) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return parts.join(".");
   }
+
+  function decrement(items, item, id) {
+    var elementIndex = -1;
+    items.forEach((element, index, array) => {
+      if (element.id === item.id) {
+        elementIndex = index;
+      }
+    });
+    item.quantity = item.quantity - 1;
+
+    items[elementIndex] = item;
+
+    return items.slice();
+  }
+
   return (
     <SheetProvider>
       <SafeAreaView className="flex-1 bg-white">
@@ -184,7 +199,49 @@ export default function HomeScreen() {
                     return item.quantity > 0;
                   })
                   .map((item) => {
-                    return <CartItem item={item} key={item.id} />;
+                    return (
+                      <CartItem
+                        item={item}
+                        key={item.id}
+                        onPlus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
+
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
+                              }
+                            });
+                            item.quantity = item.quantity + 1;
+
+                            prev[elementIndex] = item;
+                            return prev.slice();
+                          })
+                        }
+                        onMinus={() =>
+                          setDisplayedProducts((prev) => {
+                            var elementIndex = -1;
+                            prev.forEach((element, index, array) => {
+                              if (element.id === item.id) {
+                                elementIndex = index;
+                              }
+                            });
+                            item.quantity = item.quantity - 1;
+
+                            prev[elementIndex] = item;
+                            if (
+                              prev.reduce((totalItem, item) => {
+                                return totalItem + item.quantity;
+                              }, 0) <= 0
+                            ) {
+                              setShowBasket(false);
+                            }
+
+                            return prev.slice();
+                          })
+                        }
+                      />
+                    );
                   })}
               </View>
               <Text className="text-right mx-4 my-1">{`Total: Rp ${numberWithCommas(
