@@ -17,7 +17,7 @@ const MenuCard = ({
     <TouchableOpacity
       key={id}
       className={
-        "flex flex-col w-[49%] mb-4 rounded-3xl max-h-70 border bg-white border-white p-1 shadow-md shadow-neutral-400/70"
+        "flex flex-col w-[49%] max-w-60 mb-4 rounded-3xl border bg-white border-white p-1 shadow-md shadow-neutral-400/70"
       }
       onPress={onPress}
     >

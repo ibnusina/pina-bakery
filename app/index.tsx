@@ -132,7 +132,7 @@ export default function HomeScreen() {
 
             <View className="px-4">
               <Text className="text-xl font-bold mb-4">Food Menu</Text>
-              <View className="flex-row flex-wrap justify-between gap-1">
+              <View className="flex-row flex-wrap justify-between gap-1 md:justify-start md:gap-4">
                 {products
                   .filter((item) => {
                     if (selectedCategory === FoodCategory.None) {
